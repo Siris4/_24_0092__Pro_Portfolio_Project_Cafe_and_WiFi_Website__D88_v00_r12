@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Finder by Siris</title>
+    <style>
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh; /* Full height view */
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Specific column styles */
+        .filters-column {
+            width: 33%;
+            background-color: #b3e5fc; /* Light blue background */
+        }
+
+        .cafes-column {
+            width: 34%;
+            background-color: #ffe0b2; /* Light orange background */
+            overflow-y: auto; /* Enables scrolling for the middle section */
+            padding: 20px;
+        }
+
+        .map-column {
+            width: 33%;
+            background-color: #e1bee7; /* Light purple background */
+        }
+
+        /* Separator styles */
+        .separator {
+            width: 1px;
+            background-color: black;
+        }
+
+        /* Cafe card specific styles */
+        .cafes-list {
+            width: 100%;
+            max-height: 100%; /* Allows the list to take full height of the middle section */
+            overflow-y: auto; /* Enables scrolling for the cafe cards */
+            padding-right: 10px; /* Adds padding for smoother scrolling */
+        }
+
+        .cafe-card {
+            background-color: white; /* White background for cafe cards */
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            width: 100%; /* Full width cafe cards */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Additional styling for cafe finder sections */
+        h2 {
+            text-align: left;
+            width: 100%;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .form-section {
+            grid-column: span 3;
+            margin: 20px 0 10px 0; /* Adds space above the section header */
+            font-weight: bold;
+            text-align: left;
+        }
+
+        form label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .filters-column, .cafes-column, .map-column {
+                width: 100%;
+                height: auto;
+            }
+
+            iframe {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Column: Filters -->
+    <div class="column filters-column">
+        <h2>Filters</h2>
+        <form>
+            <!-- Productivity Section -->
+            <div class="form-section">Productivity</div>
+            <label><input type="checkbox"> Wi-Fi</label>
+            <label><input type="checkbox"> Electric sockets</label>
+            <label><input type="checkbox"> Can Take Calls</label>
+            <label><input type="checkbox"> Long Stays</label>
+            <label><input type="checkbox"> Tables</label>
+            <label><input type="checkbox"> Quiet</label>
+
+            <!-- Community Section -->
+            <div class="form-section">Community</div>
+            <label><input type="checkbox"> Work vibe</label>
+            <label><input type="checkbox"> Groups</label>
+
+            <!-- Service Section -->
+            <div class="form-section">Service</div>
+            <label><input type="checkbox"> Coffee</label>
+            <label><input type="checkbox"> Food</label>
+            <label><input type="checkbox"> Veggie</label>
+            <label><input type="checkbox"> Alcohol</label>
+            <label><input type="checkbox"> Accepts cards</label>
+
+            <!-- Space Section -->
+            <div class="form-section">Space</div>
+            <label><input type="checkbox"> Light</label>
+            <label><input type="checkbox"> Outdoor</label>
+            <label><input type="checkbox"> Spacious</label>
+            <label><input type="checkbox"> Restroom</label>
+            <label><input type="checkbox"> Accessible</label>
+            <label><input type="checkbox"> A/C</label>
+            <label><input type="checkbox"> Pets</label>
+            <label><input type="checkbox"> Parking</label>
+        </form>
+    </div>
+
+    <div class="separator"></div> <!-- First separator -->
+
+    <!-- Middle Column: Cafe List -->
+    <div class="column cafes-column">
+        <h2>Available Cafes</h2>
+        <div class="cafes-list">
+            <!-- Dynamically render cafe cards -->
+            {% for cafe in cafes %}
+                <div class="cafe-card">
+                    <h3>{{ cafe.name }}</h3>
+                    <p>Location: {{ cafe.location }}</p>
+                    <p>Seats: {{ cafe.seats }}</p>
+                    <p>Wi-Fi: {{ 'Yes' if cafe.has_wifi else 'No' }}</p>
+                    <p>Electric sockets: {{ 'Yes' if cafe.has_sockets else 'No' }}</p>
+                    <p>Toilet: {{ 'Yes' if cafe.has_toilet else 'No' }}</p>
+                    <p>Can Take Calls: {{ 'Yes' if cafe.can_take_calls else 'No' }}</p>
+                    <p>Coffee Price: {{ cafe.coffee_price }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="separator"></div> <!-- Second separator -->
+
+    <!-- Right Column: Google Map -->
+    <div class="column map-column">
+        <h2>Map of London</h2>
+        <!-- Embed Google Maps with a draggable map -->
+        <iframe
+            width="100%"
+            height="400px"
+            frameborder="0"
+            style="border:0"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24117.647470747664!2d-0.1276472!3d51.5073219!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b3341e81a4f%3A0x2f5a45cd473d9218!2sLondon!5e0!3m2!1sen!2suk!4v1632828652755!5m2!1sen!2suk"
+            allowfullscreen>
+        </iframe>
+    </div>
+</div>
+
+</body>
+</html>
